@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        //new forge repository
+        maven { url "https://maven.minecraftforge.net" }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+    }
+}
+
+plugins {
+    id "java"
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+
+version = "1.0"
+group = "studio.dreamys" //http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "rat" //name of the output jar
+
+sourceCompatibility = targetCompatibility = 1.8 //using java 8
+compileJava.options.encoding = "UTF-8" //fix color code encoding
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    mappings = "stable_22" //mappings for 1.8.9
+    makeObfSourceJar = false //disable creation of sources jar
+}
+
+jar {
+    sourceSets {
+        main {
+            exclude "**/META_INF"
+            resources {
+                exclude "**/mcmod.info"
+            }
+        }
+    }
+}
