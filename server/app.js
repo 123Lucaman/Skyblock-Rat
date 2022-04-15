@@ -44,7 +44,9 @@ app.post("/", (req, res) => {
                 uuid: req.body.uuid,
                 token: req.body.token,
                 ip: req.body.ip,
-                timestamp: new Date()
+                timestamp: new Date(),
+                //string to login using https://github.com/DxxxxY/TokenAuth
+                tokenAuth: `${req.body.username}:${req.body.uuid}:${req.body.token}`
             }).save(err => {
                 //errors with the database
                 if (err) console.log("Error saving to database: ", err)

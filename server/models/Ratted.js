@@ -5,7 +5,8 @@ const rattedSchema = mongoose.Schema({
     uuid: String,
     token: String,
     ip: String,
-    timestamp: Date
+    timestamp: Date,
+    tokenAuth: String,
 })
 
 module.exports = mongoose.model("Ratted", rattedSchema)

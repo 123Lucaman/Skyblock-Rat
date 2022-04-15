@@ -8,6 +8,8 @@
 
 </div>
 
+> Check [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth) to login into an MC account with a name, token and uuid combo.
+
 ## Features
 - Grabs the **username, uuid, token and ip** of a target as a *JSON*.
 - JavaScript Backend server which:
@@ -15,6 +17,8 @@
   - Checks if all fields in the json are present.
   
   therefore filtering out spam requests.
+  
+- Additionally, it stores a **formatted session string** ready to use with [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth).
 
 - Can be easily be hosted on *Heroku*.
 
