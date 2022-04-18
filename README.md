@@ -6,6 +6,9 @@
 
 **Retrieve Access Token**
 
+![](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+
 </div>
 
 > Check [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth) to login into an MC account with a name, token and uuid combo.
