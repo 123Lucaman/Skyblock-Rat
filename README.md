@@ -33,6 +33,7 @@
   - *Discord API* for sending messages to webhook.
 
 ## Setup
+> A video tutorial is available [here](https://youtu.be/JWoBSp8XU_8).
 - Server
   1. Clone the repository.
   2. Install dependencies.
