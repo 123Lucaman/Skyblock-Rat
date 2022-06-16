@@ -16,7 +16,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 
 version = "1.0"
 group = "studio.dreamys" //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "rat" //name of the output jar
+archivesBaseName = "R.A.T" //name of the output jar
 
 sourceCompatibility = targetCompatibility = 1.8 //using java 8
 compileJava.options.encoding = "UTF-8" //fix color code encoding
