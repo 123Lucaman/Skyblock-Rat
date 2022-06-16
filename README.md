@@ -26,6 +26,7 @@
 - Makes nuking/trolling impossible, due to webhook/database urls private.
 - Can be easily be hosted on *Heroku*.
 - Can be easily configured to either use `Discord Webhooks` or `MongoDB` or both.
+- Bypasses PizzaClient's SessionProtection.
 
 - Uses:
   - *Express* for the backend server.
