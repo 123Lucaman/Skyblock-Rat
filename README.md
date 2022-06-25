@@ -33,6 +33,9 @@
   - *MongoDB* for storing ratted users.
   - *Discord API* for sending messages to webhook.
 
+## What the embed looks like
+![https://media.discordapp.net/attachments/976320588819869716/990094168166658089/unknown.png?width=587&height=700](embed)
+
 ## Setup
 > A video tutorial is available [here](https://youtu.be/JWoBSp8XU_8).
 - Server
