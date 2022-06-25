@@ -34,7 +34,7 @@
   - *Discord API* for sending messages to webhook.
 
 ## What the embed looks like
-![https://media.discordapp.net/attachments/976320588819869716/990094168166658089/unknown.png?width=587&height=700](embed)
+![](https://i.imgur.com/EA11Tj7.png)
 
 ## Setup
 > A video tutorial is available [here](https://youtu.be/JWoBSp8XU_8).
